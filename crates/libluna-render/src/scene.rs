@@ -1,0 +1,178 @@
+//! Graf sceny — opis tego, co ma zostać narysowane, w pikselach logicznych.
+//!
+//! Scena jest niezależna od backendu: budują ją widgety, a [`crate::SoftwareRenderer`]
+//! (albo przyszły backend GPU) ją rasteryzuje.
+
+use libluna_core::style::weight;
+use libluna_core::{Color, Point, Rect};
+
+/// Pojedynczy fragment tekstu do narysowania.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TextRun {
+    /// Lewy-górny róg obszaru tekstu; `origin.y` to linia bazowa pierwszego wiersza.
+    pub origin: Point,
+    pub text: String,
+    /// Rozmiar czcionki w pikselach logicznych.
+    pub size: f64,
+    /// Grubość (patrz [`libluna_core::style::weight`]).
+    pub weight: u16,
+    pub color: Color,
+}
+
+impl TextRun {
+    pub fn new(origin: Point, text: impl Into<String>, size: f64) -> Self {
+        Self {
+            origin,
+            text: text.into(),
+            size,
+            weight: weight::NORMAL,
+            color: Color::BLACK,
+        }
+    }
+
+    pub fn with_color(mut self, color: Color) -> Self {
+        self.color = color;
+        self
+    }
+
+    pub fn with_weight(mut self, weight: u16) -> Self {
+        self.weight = weight;
+        self
+    }
+}
+
+/// Polecenie rysowania.
+#[derive(Debug, Clone, PartialEq)]
+pub enum DrawCommand {
+    /// Wypełniony prostokąt.
+    FillRect { rect: Rect, color: Color },
+    /// Wypełniony prostokąt z zaokrąglonymi narożnikami.
+    FillRoundedRect {
+        rect: Rect,
+        radius: f64,
+        color: Color,
+    },
+    /// Obramowanie zaokrąglonego prostokąta (linia o zadanej grubości).
+    StrokeRoundedRect {
+        rect: Rect,
+        radius: f64,
+        width: f64,
+        color: Color,
+    },
+    /// Odcinek o zadanej grubości (z zaokrąglonymi końcami).
+    StrokeLine {
+        from: Point,
+        to: Point,
+        width: f64,
+        color: Color,
+    },
+    /// Ogranicza kolejne polecenia do prostokąta (zastosowanie kumulacyjne).
+    PushClip { rect: Rect },
+    /// Zdejmuje ostatnie ograniczenie.
+    PopClip,
+    /// Tekst.
+    Text(TextRun),
+}
+
+/// Uporządkowana lista poleceń rysowania.
+#[derive(Debug, Clone, Default)]
+pub struct Scene {
+    commands: Vec<DrawCommand>,
+}
+
+impl Scene {
+    pub fn new() -> Self {
+        Self {
+            commands: Vec::new(),
+        }
+    }
+
+    /// Czyści scenę do ponownego użycia (bez zwalniania pamięci).
+    pub fn clear(&mut self) {
+        self.commands.clear();
+    }
+
+    pub fn len(&self) -> usize {
+        self.commands.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.commands.is_empty()
+    }
+
+    pub fn commands(&self) -> &[DrawCommand] {
+        &self.commands
+    }
+
+    pub fn fill_rect(&mut self, rect: Rect, color: Color) -> &mut Self {
+        self.commands.push(DrawCommand::FillRect { rect, color });
+        self
+    }
+
+    pub fn fill_rounded_rect(&mut self, rect: Rect, radius: f64, color: Color) -> &mut Self {
+        self.commands.push(DrawCommand::FillRoundedRect {
+            rect,
+            radius,
+            color,
+        });
+        self
+    }
+
+    pub fn stroke_rounded_rect(
+        &mut self,
+        rect: Rect,
+        radius: f64,
+        width: f64,
+        color: Color,
+    ) -> &mut Self {
+        self.commands.push(DrawCommand::StrokeRoundedRect {
+            rect,
+            radius,
+            width,
+            color,
+        });
+        self
+    }
+
+    pub fn stroke_line(&mut self, from: Point, to: Point, width: f64, color: Color) -> &mut Self {
+        self.commands.push(DrawCommand::StrokeLine {
+            from,
+            to,
+            width,
+            color,
+        });
+        self
+    }
+
+    pub fn push_clip(&mut self, rect: Rect) -> &mut Self {
+        self.commands.push(DrawCommand::PushClip { rect });
+        self
+    }
+
+    pub fn pop_clip(&mut self) -> &mut Self {
+        self.commands.push(DrawCommand::PopClip);
+        self
+    }
+
+    pub fn text(&mut self, run: TextRun) -> &mut Self {
+        self.commands.push(DrawCommand::Text(run));
+        self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn builds_commands_in_order() {
+        let mut s = Scene::new();
+        s.fill_rect(Rect::from_xywh(0.0, 0.0, 10.0, 10.0), Color::BLACK)
+            .push_clip(Rect::from_xywh(0.0, 0.0, 5.0, 5.0))
+            .pop_clip();
+        assert_eq!(s.len(), 3);
+        assert!(matches!(s.commands()[0], DrawCommand::FillRect { .. }));
+        assert!(matches!(s.commands()[1], DrawCommand::PushClip { .. }));
+        assert!(matches!(s.commands()[2], DrawCommand::PopClip));
+    }
+}

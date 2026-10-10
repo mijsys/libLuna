@@ -1,0 +1,67 @@
+//! # libluna-widgets
+//!
+//! Zestaw widgetów libLuny w modelu **immediate**: widget to zwykła struktura ze stanem,
+//! a aplikacja woła dla niego `paint` (rysunek) i `*_at`/`click_at` (trafianie i zmiana
+//! stanu). Dzięki temu widgety są łatwe do testowania (hit-test bez okna) i tanie.
+//!
+//! Docelowo (M2) powstanie nad tym retencyjne drzewo z `measure`/`allocate`; te widgety
+//! staną się jego liśćmi, ale kontrakt (`paint`/`hit`) zostaje.
+//!
+//! Widgety:
+//! - [`ViewSwitcher`] — segmentowy przełącznik (`Lista | Siatka`, `Jasny | Ciemny | Auto`).
+//! - [`NavList`] — menu nawigacji (sekcje + pozycje).
+//! - [`Menu`] — popover z pozycjami, separatorami i skrótami (menu `☰`).
+//! - [`Button`] — przycisk z etykietą i wariantami.
+//! - [`Switch`] — przełącznik wł./wył.
+//! - [`Slider`] — suwak 0..1.
+//! - [`DropDown`] — lista rozwijana (rozwinięcie przez [`Menu`]).
+//! - [`HeaderBar`] — pasek tytułu okna (CSD) z kontrolkami okna i obszarem na treść.
+//! - [`TabBar`] / [`TabView`] — pasek zakładek i model stron (dodawanie, zamykanie, wybór).
+//! - [`BottomSheet`] — dolny panel (modalny) z „grabberem” i zamykaniem.
+//! - [`Pager`] — karuzela stron (przewijanie w poziomie + kropki-wskaźniki).
+//! - [`PathBar`] — pasek ścieżki (okruszki) z separatorami i zwijaniem w wielokropek.
+//! - [`SearchEntry`] — pole tekstowe wyszukiwania (lupka, kursor, czyszczenie).
+//! - [`ItemView`] — widok elementów (pliki/katalogi) w siatce lub liście.
+//!
+//! ```no_run
+//! use libluna_widgets::{PaintCtx, ViewSwitcher};
+//! # fn demo(ctx: &mut PaintCtx, rect: libluna_core::Rect) {
+//! let mut switcher = ViewSwitcher::new(["Lista", "Siatka"]);
+//! switcher.paint(ctx, rect);
+//! # }
+//! ```
+
+pub mod bottom_sheet;
+pub mod button;
+pub mod ctx;
+pub mod dropdown;
+pub mod header_bar;
+pub mod icon;
+pub mod item_view;
+pub mod menu;
+pub mod nav_list;
+pub mod pager;
+pub mod path_bar;
+pub mod search_entry;
+pub mod slider;
+pub mod switch;
+pub mod tab_bar;
+pub mod tab_view;
+pub mod view_switcher;
+
+pub use bottom_sheet::BottomSheet;
+pub use button::{Button, ButtonVariant};
+pub use ctx::PaintCtx;
+pub use dropdown::DropDown;
+pub use header_bar::{ControlsLayout, ControlsSide, HeaderBar, TitleAlign, WindowControl};
+pub use item_view::{Item, ItemKind, ItemView, ViewMode};
+pub use menu::{Menu, MenuEntry, MenuRow};
+pub use nav_list::{NavEntry, NavList, NavRow};
+pub use pager::Pager;
+pub use path_bar::PathBar;
+pub use search_entry::SearchEntry;
+pub use slider::Slider;
+pub use switch::Switch;
+pub use tab_bar::{Tab, TabBar};
+pub use tab_view::TabView;
+pub use view_switcher::ViewSwitcher;

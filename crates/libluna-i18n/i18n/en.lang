@@ -1,0 +1,48 @@
+# English — język bazowy. Kluczem jest sam angielski napis.
+# Format: klucz = tłumaczenie (linie zaczynające się od # to komentarze).
+# `__name__` to nazwa języka pokazywana w interfejsie (w tym języku).
+
+__name__ = English
+
+Application = Application
+Options = Options
+Overview = Overview
+Account = Account
+Appearance = Appearance
+Notifications = Notifications
+Advanced = Advanced
+Network = Network
+System = System
+Settings = Settings
+Option A = Option A
+Option B = Option B
+Volume level = Volume level
+Choose… = Choose…
+Status: Ready = Status: Ready
+Version = Version
+Theme = Theme
+Light = Light
+Dark = Dark
+Auto = Auto
+Accent color = Accent color
+Language = Language
+Bottom bar = Bottom bar
+Sidebar = Sidebar
+View = View
+List = List
+Grid = Grid
+New Window = New Window
+Keyboard Shortcuts = Keyboard Shortcuts
+About = About
+General = General
+Tabs = Tabs
+Active tab = Active tab
+License = License
+Home = Home
+Documents = Documents
+Projects = Projects
+Search = Search
+Files = Files
+Report = Report
+Notes = Notes
+Budget = Budget

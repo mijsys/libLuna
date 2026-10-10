@@ -1,0 +1,46 @@
+# Français — plik doładowywany w runtime (bez rekompilacji).
+# Trzymaj go np. w ~/.config/luna/i18n/fr.lang albo /usr/share/luna/i18n/fr.lang.
+# Celowo pomijamy część kluczy — brakujące spadają do języka bazowego (angielskiego).
+
+__name__ = Français
+
+Application = Application
+Options = Options
+Overview = Aperçu
+Account = Compte
+Appearance = Apparence
+Notifications = Notifications
+Advanced = Avancé
+Network = Réseau
+System = Système
+Settings = Paramètres
+Option A = OPTION A
+Volume level = Volume
+Choose… = Choisir…
+Status: Ready = État : Prêt
+Theme = Thème
+Light = Clair
+Dark = Sombre
+Auto = Automatique
+Accent color = Couleur d'accent
+Language = Langue
+Bottom bar = Barre inférieure
+Sidebar = Barre latérale
+View = Affichage
+List = Liste
+Grid = Grille
+New Window = Nouvelle fenêtre
+Keyboard Shortcuts = Raccourcis clavier
+About = À propos
+General = Général
+Tabs = Onglets
+Active tab = Onglet actif
+License = Licence
+Home = Dossier personnel
+Documents = Documents
+Projects = Projets
+Search = Rechercher
+Files = Fichiers
+Report = Rapport
+Notes = Notes
+Budget = Budget

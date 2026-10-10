@@ -1,0 +1,22 @@
+//! # libluna-render
+//!
+//! Warstwa rysowania libLuny — odpowiednik Gsk w GTK.
+//!
+//! Składa się z dwóch niezależnych kawałków:
+//!
+//! - [`scene`] — **graf sceny** ([`Scene`]): lista prymitywów (prostokąty, zaokrąglone
+//!   prostokąty, obramowania, clip, tekst). Platforma i widgety budują scenę, nie
+//!   dotykając pikseli.
+//! - [`SoftwareRenderer`] — backend **CPU** (tiny-skia + fontdue), który rasteryzuje
+//!   scenę do bufora RGBA8888 gotowego do wysłania przez `wl_shm`.
+//!
+//! Rozdzielenie sceny od backendu pozwala później dodać backend GPU bez zmian
+//! w widgetach.
+
+pub mod scene;
+pub mod software;
+pub mod text;
+
+pub use scene::{DrawCommand, Scene, TextRun};
+pub use software::SoftwareRenderer;
+pub use text::TextEngine;
