@@ -326,4 +326,4 @@ i ujednolicić warstwę UI w czystym Rust. Bazą jest tu **libLuna**; dotychczas
 
 ## Licencja
 
-MPL-2.0 (do potwierdzenia przez właściciela projektu).
+MIT
